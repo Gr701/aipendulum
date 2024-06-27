@@ -20,10 +20,16 @@ void GrColor::print() { std::cout << "r - " << r << " g - " << g << " b - " << b
 
 GrPoint::GrPoint(): x(0), y(0) {}
 GrPoint::GrPoint(int x, int y): x(x), y(y) {}
+GrPoint GrPoint::operator+(const GrPoint & rhs) {
+    return GrPoint(this->x + rhs.x, this->y + rhs.y);
+}
 GrPoint & GrPoint::operator+=(const GrPoint & rhs) {
     this->x += rhs.x;
     this->y += rhs.y;
     return *this;
+}
+GrPoint GrPoint::operator*(int c) {
+    return GrPoint(this->x * c, this->y * c);
 }
 
 void renderImage() {
@@ -58,18 +64,34 @@ void drawLine(GrPoint point1, GrPoint point2, GrColor color, int thickness) {
     drawLine(point1, point2, color);
     int dx = point2.x - point1.x;
     int dy = point2.y - point1.y;
-    GrPoint step;
-    step.x = (dx > 0) ? 1 : -1;
-    step.y = (dy > 0) ? 1 : -1;
+    bool isChangeX;
+    GrPoint step(
+        (dx > 0) ? 1 : -1,
+        (dy > 0) ? 1 : -1
+    );
     GrPoint change;
     if (abs(dx) < abs(dy)) {
         change.x = step.x;
+        isChangeX = true;
     } else {
         change.y = step.y;
+        isChangeX = false;
     } 
+    for (int i = 1; i <= thickness / 2; i++) {
+        point1 += change * i;
+        point2 += change * i;
+        drawLine(point1 + change * i, point2, color);
+    } 
+    for (int i = 0; i < (thickness - 1) / 2; i++) {
+        //opposite side steps
+    }
+    
     for (int t = 0; t < thickness; t++) {
         point1 += change;
         point2 += change;
+        if (isChangeX) {
+            (change.x *= -1) += 1;
+        }
         drawLine(point1, point2, color);
     } 
 }

@@ -2,10 +2,13 @@
 #include <cmath>
 #include "imageDisplay.h"
 
+
 int main () {
-    createWindow(0, 0, 1920, 1080);
-    GrColor color(255, 255, 0);
+    createWindow(-1920, 0, 1920, 1080);
+    GrColor color;
+
     GrPoint center1(300, 500);
+
     GrPoint center2(700, 500);
     int radius = 100; 
 
@@ -16,7 +19,7 @@ int main () {
         }
         for (int angle = 0; angle < 360; angle += 10) {
             GrPoint p(center2.x + radius * cos(angle * 3.14 / 180), center2.y + radius * sin(angle * 3.14 / 180));
-            drawLine(center2, p, color, 2);
+            drawLine(center2, p, color);
         }
         renderImage();
         Sleep(1000/60);

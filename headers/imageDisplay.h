@@ -14,7 +14,9 @@ struct GrPoint {
     int x, y;
     GrPoint();
     GrPoint(int x, int y);
+    GrPoint operator+(const GrPoint & rhs);
     GrPoint & operator+=(const GrPoint & rhs);
+    GrPoint operator*(int c);
 };
 
 void createWindow(int x, int y, int width, int height);
