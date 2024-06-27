@@ -28,6 +28,9 @@ GrPoint & GrPoint::operator+=(const GrPoint & rhs) {
     this->y += rhs.y;
     return *this;
 }
+GrPoint GrPoint::operator-(const GrPoint & rhs) {
+    return GrPoint(this->x - rhs.x, this->y - rhs.y);
+}
 GrPoint GrPoint::operator*(int c) {
     return GrPoint(this->x * c, this->y * c);
 }
@@ -50,6 +53,10 @@ void drawPixel(int x, int y, const GrColor* color) {
     displayBuffer[pixelOffset] = color->b;
     displayBuffer[pixelOffset + 1] = color->g;
     displayBuffer[pixelOffset + 2] = color->r;
+}
+
+void drawPixel(GrPoint point, GrColor color) {
+    drawPixel(point.x, point.y, &color);
 }
 
 void fillRect(int ix, int iy, int width, int height, GrColor color) {
@@ -78,22 +85,11 @@ void drawLine(GrPoint point1, GrPoint point2, GrColor color, int thickness) {
         isChangeX = false;
     } 
     for (int i = 1; i <= thickness / 2; i++) {
-        point1 += change * i;
-        point2 += change * i;
-        drawLine(point1 + change * i, point2, color);
+        drawLine(point1 + change * i, point2 + change * i, color);
     } 
-    for (int i = 0; i < (thickness - 1) / 2; i++) {
-        //opposite side steps
+    for (int i = 1; i <= (thickness - 1) / 2; i++) {
+        drawLine(point1 - change * i, point2 - change * i, color);
     }
-    
-    for (int t = 0; t < thickness; t++) {
-        point1 += change;
-        point2 += change;
-        if (isChangeX) {
-            (change.x *= -1) += 1;
-        }
-        drawLine(point1, point2, color);
-    } 
 }
 
 void drawLine(GrPoint point1, GrPoint point2, GrColor color) {
@@ -105,6 +101,7 @@ void drawLine(GrPoint point1, GrPoint point2, GrColor color) {
     int x = point1.x;
     int y = point1.y;
     int xerr = 0, yerr = 0;
+    drawPixel(point1, color);
     while (x != point2.x || y != point2.y) {
         xerr += dx;
         yerr += dy;

@@ -16,6 +16,7 @@ struct GrPoint {
     GrPoint(int x, int y);
     GrPoint operator+(const GrPoint & rhs);
     GrPoint & operator+=(const GrPoint & rhs);
+    GrPoint operator-(const GrPoint & rhs);
     GrPoint operator*(int c);
 };
 
@@ -34,6 +35,8 @@ void renderImage();
 void clearRender(GrColor color);
 
 void drawPixel(int x, int y, const GrColor* color);
+
+void drawPixel(GrPoint point, GrColor color);
 
 void fillRect(int x, int y, int width, int height, GrColor color);
 
