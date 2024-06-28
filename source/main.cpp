@@ -4,7 +4,7 @@
 
 
 int main () {
-    createWindow(-1920, 0, 1920, 1080);
+    createWindow(-1920, 0, 1920, 1080, 0);
     GrColor color(255, 0, 255);
     int radius = 100; 
 

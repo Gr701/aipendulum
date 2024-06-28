@@ -201,11 +201,10 @@ LRESULT CALLBACK windowProcedure(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPa
             return 0;
         
     }
-    
     return DefWindowProcA(hWnd, uMsg, wParam, lParam);
 }
 
-void createWindow(int x, int y, int width, int height) {
+void createWindow(int x, int y, int width, int height, DWORD style) {
     hInstance = GetModuleHandleA(nullptr);
 
     WNDCLASSA wndClass = {};
@@ -215,7 +214,9 @@ void createWindow(int x, int y, int width, int height) {
 
     RegisterClassA(&wndClass);
 
-    DWORD style = WS_CAPTION | WS_MINIMIZEBOX | WS_SYSMENU | WS_EX_LAYERED | WS_EX_TRANSPARENT;
+    if (style == 0) {
+        style = WS_CAPTION | WS_MINIMIZEBOX | WS_SYSMENU | WS_EX_LAYERED | WS_EX_TRANSPARENT;
+    }
     
     hWnd = CreateWindowExA(0, className, "title", style, x, y, width, height, NULL, NULL, hInstance, NULL);
     

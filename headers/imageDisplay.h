@@ -20,7 +20,7 @@ struct GrPoint {
     GrPoint operator*(int c);
 };
 
-void createWindow(int x, int y, int width, int height);
+void createWindow(int x, int y, int width, int height, DWORD style);
 
 void makeWindowTransparent(int r, int g, int b);
 
