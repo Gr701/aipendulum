@@ -2,26 +2,17 @@
 #include <cmath>
 #include "imageDisplay.h"
 
-
 int main () {
-    createWindow(-1920, 0, 1920, 1080, 0);
+    createWindow(0, 0, 1920, 1080, 0);
     GrColor color(255, 0, 255);
     int radius = 100; 
 
     while (processMessages()) {
-        for (int i = 1; i <= 5; i++) {
-            GrPoint center((i) * 250, 500);
-            for (int angle = 0; angle < 360; angle += 10) {
-                GrPoint p(center.x + radius * cos(angle * 3.14 / 180), center.y + radius * sin(angle * 3.14 / 180));
-                drawLine(center, p, color, i);
-                drawPixel(p, GrColor(100, 255, 100));
-            }
-        }
         
-        /*for (int angle = 0; angle < 360; angle += 10) {
-            GrPoint p(center2.x + radius * cos(angle * 3.14 / 180), center2.y + radius * sin(angle * 3.14 / 180));
-            drawLine(center2, p, color);
-        }*/
+        for (int radius = 10; radius < 56; radius += 10) {
+            fillCircle(GrPoint(10 + 150 * (radius - 50), 500), radius, color);
+        }
+       
         renderImage();
         Sleep(1000/60);
     }

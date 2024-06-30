@@ -1,7 +1,9 @@
 #pragma once
 
+#include <iostream>
 #include <windows.h>
 #include <algorithm> 
+#include <cmath>
 
 struct GrColor {
     int r, g, b;
@@ -38,11 +40,15 @@ void drawPixel(int x, int y, const GrColor* color);
 
 void drawPixel(GrPoint point, GrColor color);
 
-void fillRect(int x, int y, int width, int height, GrColor color);
-
 void drawLine(GrPoint point1, GrPoint point2, GrColor color);
 
 void drawLine(GrPoint point1, GrPoint point2, GrColor color, int thickness);
+
+void fillRect(int x, int y, int width, int height, GrColor color);
+
+void drawCircle(GrPoint center, int radius, GrColor color);
+
+void fillCircle(GrPoint center, int radius, GrColor color);
 
 void draw1dBuffer(int x, int y, int width, int height, int* buffer);
 

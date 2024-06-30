@@ -1,4 +1,3 @@
-#include <iostream>
 #include "imageDisplay.h"
 
 HINSTANCE hInstance;
@@ -59,14 +58,6 @@ void drawPixel(GrPoint point, GrColor color) {
     drawPixel(point.x, point.y, &color);
 }
 
-void fillRect(int ix, int iy, int width, int height, GrColor color) {
-    for (int y = iy; y < iy + height; y++) {
-        for (int x = ix; x < ix + width; x++) {
-            drawPixel(x, y, &color);
-        }
-    }
-}
-
 void drawLine(GrPoint point1, GrPoint point2, GrColor color, int thickness) {
     drawLine(point1, point2, color);
     int dx = point2.x - point1.x;
@@ -116,6 +107,33 @@ void drawLine(GrPoint point1, GrPoint point2, GrColor color) {
         drawPixel(x, y, &color);
     }
 }
+
+void fillRect(int ix, int iy, int width, int height, GrColor color) {
+    for (int y = iy; y < iy + height; y++) {
+        for (int x = ix; x < ix + width; x++) {
+            drawPixel(x, y, &color);
+        }
+    }
+}
+
+void drawCircle(GrPoint center, int radius, GrColor color) {
+    double step = 360. / (4 + (radius - 1) * 8);
+    for (double angle = 1; angle < 360; angle += step) {
+        int x = center.x + radius * std::cos(angle * 3.14 / 180);
+        int y = center.y + radius * std::sin(angle * 3.14 / 180);
+        drawPixel(x, y, &color);
+    }
+}
+
+void fillCircle(GrPoint center, int radius, GrColor color) {
+    for (int y = center.y - radius; y < center.y + radius; y++) {
+        for (int x = center.x - radius; x < center.x + radius; x++) {
+            if (pow(center.x - x, 2) + pow(center.y - y, 2) <= pow(radius, 2)) {
+                drawPixel(x, y, &color);
+            }
+        }
+    }     
+} 
 
 void draw1dBuffer(int ix, int iy, int width, int height, int* buffer) {
     int xLimit = std::min(std::abs((int)bitmapInfo.bmiHeader.biWidth), ix + width);
@@ -205,6 +223,7 @@ LRESULT CALLBACK windowProcedure(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPa
 }
 
 void createWindow(int x, int y, int width, int height, DWORD style) {
+    
     hInstance = GetModuleHandleA(nullptr);
 
     WNDCLASSA wndClass = {};
@@ -214,8 +233,9 @@ void createWindow(int x, int y, int width, int height, DWORD style) {
 
     RegisterClassA(&wndClass);
 
+    //https://learn.microsoft.com/en-us/windows/win32/winmsg/window-styles
     if (style == 0) {
-        style = WS_CAPTION | WS_MINIMIZEBOX | WS_SYSMENU | WS_EX_LAYERED | WS_EX_TRANSPARENT;
+        style = WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX  | WS_MAXIMIZEBOX;
     }
     
     hWnd = CreateWindowExA(0, className, "title", style, x, y, width, height, NULL, NULL, hInstance, NULL);
@@ -236,15 +256,7 @@ bool processMessages() {
         switch (msg.message)  {
             case WM_QUIT:
                 return false;
-            //case WM_LBUTTONDOWN:
-            //    std::cout << 1;
-            //    return 0;
         }
-        //if (msg.message == WM_QUIT)
-        //{
-        //    return false;
-        //}
-
         TranslateMessage(&msg);
         DispatchMessageA(&msg);
     }
@@ -253,9 +265,12 @@ bool processMessages() {
 
 void makeWindowTransparent(int r, int g, int b) {
     // Change window type to layered (https://stackoverflow.com/a/3970218/3357935)
-    SetWindowLongA(hWnd, GWL_EXSTYLE, GetWindowLongA(hWnd, GWL_EXSTYLE) | WS_EX_LAYERED);
+    SetWindowLongA(hWnd, GWL_EXSTYLE, GetWindowLongA(hWnd, GWL_EXSTYLE) | WS_EX_LAYERED); //WS_EX_TRANSPARENT?
     SetWindowPos(hWnd, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE);
     SetLayeredWindowAttributes(hWnd, RGB(r, g, b), 0, LWA_COLORKEY);
+
+    //SetWindowLongA(hWnd, GWL_STYLE, GetWindowLongA(hWnd, GWL_STYLE) & ~(WS_CAPTION | WS_THICKFRAME));
+    //SetWindowLongA(hWnd, GWL_EXSTYLE, GetWindowLongA(hWnd, GWL_EXSTYLE) & ~(WS_EX_DLGMODALFRAME | WS_EX_WINDOWEDGE | WS_EX_CLIENTEDGE | WS_EX_STATICEDGE));
 }
 
 
